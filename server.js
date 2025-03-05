@@ -9,9 +9,13 @@ app.use(express.json());
 
 app.use('/api', apiRoutes)
 
-app.use((err, res, req, next) => {
+app.use((err, req, res, next) => {
   console.log(err.stack);
-  res.status(500).send('Something went wrong');
+
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Something went wrong!';
+
+  res.status(statusCode).json({ message });  // Fixed: Corrected order of req, res
 });
 
 const port = process.env.PORT || 3000;
